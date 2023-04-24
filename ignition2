@@ -1,0 +1,5 @@
+variant: fcos
+version: 1.4.0
+passwd:
+  users:
+    - name: adminar
