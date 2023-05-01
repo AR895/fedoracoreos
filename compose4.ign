@@ -1,0 +1,94 @@
+{
+  "ignition": {
+    "version": "3.0.0"
+  },
+  "passwd": {
+    "users": [
+      {
+        "name": "core",
+        "passwordHash": "$y$j9T$6SCVa2VNAO26gRE3ke3Cc1$.OfmxKdhSsLQR5MxzIZUHNBRvYjt9De1Hb8HC0rByh4"
+      },
+      {
+        "groups": [
+          "sudo"
+        ],
+        "name": "adminar",
+        "passwordHash": "$y$j9T$6SCVa2VNAO26gRE3ke3Cc1$.OfmxKdhSsLQR5MxzIZUHNBRvYjt9De1Hb8HC0rByh4",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAi9AHDxaZeVW3CvUWS8PcEh3Rup9igJRFETQZZN99BdFS6v8z+BS/P6+LxfcwSPdmxbXA3HfrkjWCJbEgfebPvVnlbAZ8V9c8RBTDKT2n9gI9N4HrjcVSPnLF4zWmLtdmyG75m4fxv8W/SGoi0uEZhBGhpheBqevCXVKoRQC+/E48UKlPnH2Y1RWKrfp05p3SKpcVPOUvm5XynaK1ftgG0F82epaij9whW8A91rmEJXC2FcOYSaRF5JQZeBwDyJM5dbRjjABTo1B62hMsKcuLVl/TDDAajISpfHePABSI8wfBG91VgPrSORzQJc8xSLOG3igDqT/5Zpwm/mODh1mW0w=="
+        ]
+      }
+    ]
+  },
+  "storage": {
+    "files": [
+      {
+        "path": "/etc/modules-load.d/overlay.conf",
+        "contents": {
+          "source": "data:,overlay"
+        }
+      },
+      {
+        "path": "/etc/sysctl.d/99-kubernetes-cri.conf",
+        "contents": {
+          "source": "data:,net.bridge.bridge-nf-call-iptables%20%20%3D%201%0Anet.ipv4.ip_forward%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3D%201%0A"
+        }
+      },
+      {
+        "path": "/etc/yum.repos.d/docker-ce.repo",
+        "contents": {
+          "source": "data:,%5Bdocker-ce-stable%5D%0Aname%3DDocker%20CE%20Stable%20-%20%24basearch%0Abaseurl%3Dhttps%3A%2F%2Fdownload.docker.com%2Flinux%2Ffedora%2F30%2F%24basearch%2Fstable%0Aenabled%3D1%0Agpgcheck%3D1%0Agpgkey%3Dhttps%3A%2F%2Fdownload.docker.com%2Flinux%2Ffedora%2Fgpg%0A"
+        }
+      },
+      {
+        "path": "/etc/yum.repos.d/portainer.repo",
+        "contents": {
+          "source": "data:,%5Bportainer%5D%0Aname%3DPortainer%0Abaseurl%3Dhttps%3A%2F%2Fdownload.portainer.io%2Fagent-stack%2Ffedora%0Aenabled%3D1%0Agpgcheck%3D0%0A"
+        }
+      },
+      {
+        "path": "/etc/localtime",
+        "contents": {
+          "source": "data:,TZ%3DEurope%2FZurich"
+        }
+      },
+      {
+        "path": "/usr/local/bin/install_docker.sh",
+        "contents": {
+          "source": "data:,%23!%2Fbin%2Fbash%0Acurl%20https%3A%2F%2Fget.docker.com%20%7C%20sh%0A"
+        }
+      },
+      {
+        "path": "/usr/local/bin/install_docker-compose.sh",
+        "contents": {
+          "source": "data:,%23!%2Fbin%2Fbash%0Acurl%20-L%20https%3A%2F%2Fgithub.com%2Fdocker%2Fcompose%2Freleases%2Fdownload%2F1.29.2%2Fdocker-compose-Linux-x86_64%20-o%20%2Fusr%2Flocal%2Fbin%2Fdocker-compose%0Achmod%20%2Bx%20%2Fusr%2Flocal%2Fbin%2Fdocker-compose%0A"
+        }
+      },
+      {
+        "path": "/usr/local/bin/install_portainer.sh",
+        "contents": {
+          "source": "data:,%23!%2Fbin%2Fbash%0Adocker%20volume%20create%20portainer_data%20%5C%0A%20%20%26%26%20docker%20run%20-d%20-p%208000%3A8000%20-p%209000%3A9000%20--name%3Dportainer%20--restart%3Dalways%20-v%20%2Fvar%2Frun%2Fdocker.sock%3A%2Fvar%2Frun%2Fdocker.sock%20-v%20portainer_data%3A%2Fdata%20portainer%2Fportainer%0A"
+        }
+      }
+    ]
+  },
+  "systemd": {
+    "units": [
+      {
+        "contents": "[Unit]\nDescription=Installation de Docker\nBefore=docker.service\n\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/install_docker.sh\n\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "install-docker.service"
+      },
+      {
+        "contents": "[Unit]\nDescription=Installation de Docker Compose\nBefore=docker-compose.service\n\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/install_docker-compose.sh\n\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "install-docker-compose.service"
+      },
+      {
+        "contents": "[Unit]\nDescription=Installation de Portainer\nBefore=portainer.service\n\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/install_portainer.sh\n\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "install-portainer.service"
+      }
+    ]
+  }
+}
