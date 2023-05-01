@@ -1,0 +1,35 @@
+{
+  "ignition": {
+    "version": "3.0.0"
+  },
+  "passwd": {
+    "users": [
+      {
+        "name": "core",
+        "passwordHash": "$y$j9T$6SCVa2VNAO26gRE3ke3Cc1$.OfmxKdhSsLQR5MxzIZUHNBRvYjt9De1Hb8HC0rByh4"
+      },
+      {
+        "groups": [
+          "sudo"
+        ],
+        "name": "adminar",
+        "passwordHash": "$y$j9T$6SCVa2VNAO26gRE3ke3Cc1$.OfmxKdhSsLQR5MxzIZUHNBRvYjt9De1Hb8HC0rByh4",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAi9AHDxaZeVW3CvUWS8PcEh3Rup9igJRFETQZZN99BdFS6v8z+BS/P6+LxfcwSPdmxbXA3HfrkjWCJbEgfebPvVnlbAZ8V9c8RBTDKT2n9gI9N4HrjcVSPnLF4zWmLtdmyG75m4fxv8W/SGoi0uEZhBGhpheBqevCXVKoRQC+/E48UKlPnH2Y1RWKrfp05p3SKpcVPOUvm5XynaK1ftgG0F82epaij9whW8A91rmEJXC2FcOYSaRF5JQZeBwDyJM5dbRjjABTo1B62hMsKcuLVl/TDDAajISpfHePABSI8wfBG91VgPrSORzQJc8xSLOG3igDqT/5Zpwm/mODh1mW0w=="
+        ]
+      }
+    ]
+  },
+  "systemd": {
+    "units": [
+      {
+        "enabled": true,
+        "name": "docker.service"
+      },
+      {
+        "enabled": true,
+        "name": "sshd.service"
+      }
+    ]
+  }
+}
