@@ -1,0 +1,48 @@
+{
+  "ignition": {
+    "version": "3.4.0"
+  },
+  "passwd": {
+    "users": [
+      {
+        "groups": [
+          "sudo",
+          "docker"
+        ],
+        "homeDir": "/home/adminar",
+        "name": "adminar",
+        "noCreateHome": false,
+        "noLogInit": false,
+        "noUserGroup": false,
+        "passwordHash": "$y$j9T$6SCVa2VNAO26gRE3ke3Cc1$.OfmxKdhSsLQR5MxzIZUHNBRvYjt9De1Hb8HC0rByh4",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAi9AHDxaZeVW3CvUWS8PcEh3Rup9igJRFETQZZN99BdFS6v8z+BS/P6+LxfcwSPdmxbXA3HfrkjWCJbEgfebPvVnlbAZ8V9c8RBTDKT2n9gI9N4HrjcVSPnLF4zWmLtdmyG75m4fxv8W/SGoi0uEZhBGhpheBqevCXVKoRQC+/E48UKlPnH2Y1RWKrfp05p3SKpcVPOUvm5XynaK1ftgG0F82epaij9whW8A91rmEJXC2FcOYSaRF5JQZeBwDyJM5dbRjjABTo1B62hMsKcuLVl/TDDAajISpfHePABSI8wfBG91VgPrSORzQJc8xSLOG3igDqT/5Zpwm/mODh1mW0w=="
+        ],
+        "shell": "/bin/bash",
+        "system": false,
+        "uid": 1001
+      }
+    ]
+  },
+  "storage": {
+    "files": [
+      {
+        "path": "/etc/sysconfig/docker",
+        "contents": {
+          "compression": "gzip",
+          "source": "data:;base64,H4sIAAAAAAAC//IPCPH09wu2VdLVzSwoSUzKSS22TUvMKU5VAAno5iYWF0L4SlyefsGuzqFBrvFBru6ewSFBkbZKSlyOLi4ofCcff2dvFBEo29M1GMQDBAAA//9tAAl5cAAAAA=="
+        },
+        "mode": 420
+      }
+    ]
+  },
+  "systemd": {
+    "units": [
+      {
+        "contents": "[Unit]\nDescription=Docker Application Container Engine\nWants=network-online.target\nAfter=network-online.target\n[Service]\nType=notify\nEnvironmentFile=-/etc/sysconfig/docker\nExecStart=/usr/bin/dockerd\nExecReload=/bin/kill -s HUP $MAINPID\nExecStop=/bin/kill -s TERM $MAINPID\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "docker.service"
+      }
+    ]
+  }
+}
