@@ -27,6 +27,7 @@
   "storage": {
     "files": [
       {
+        "overwrite": true,
         "path": "/etc/sysconfig/docker",
         "contents": {
           "compression": "gzip",
