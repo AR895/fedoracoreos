@@ -1,0 +1,73 @@
+{
+  "ignition": {
+    "version": "3.4.0"
+  },
+  "passwd": {
+    "users": [
+      {
+        "groups": [
+          "sudo",
+          "docker"
+        ],
+        "homeDir": "/home/adminar",
+        "name": "adminar",
+        "noCreateHome": false,
+        "noLogInit": false,
+        "noUserGroup": false,
+        "passwordHash": "$y$j9T$6SCVa2VNAO26gRE3ke3Cc1$.OfmxKdhSsLQR5MxzIZUHNBRvYjt9De1Hb8HC0rByh4",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAt9bOMVOSmpAE4swRkS+ORqGloBMbNSIcH/Ip5eQUTHLsrIDOEn1sKi7eQjBgV+S8pojBZrMiXa5ALdxMMYVRo9FEDsvqdhyBsPJQl6CvKTyaIpG0K1alfYkSbSyFopa205a2oh0R5+r3wHanZGNwjFUCKIGy/wW5poQGlsRaXBSCndASNw/KtEcoQJAVAJ2URK4D+I2K7WuNyS2tE7KdO5HZjV7Cla2E8FNecEqEHlv8MYM9/+8vKpiEu6OviPH+fzHCqCC+vBcZvuYakyiZ2iws/sD2pCDJnyhixthQVVzrnyaRu7mWRBhZ6w5hTr8w8UtLJ1vmqTNwcjidRYoprQ=="
+        ],
+        "shell": "/bin/bash",
+        "system": false,
+        "uid": 1001
+      }
+    ]
+  },
+  "storage": {
+    "files": [
+      {
+        "overwrite": true,
+        "path": "/etc/sysconfig/iptables",
+        "contents": {
+          "compression": "gzip",
+          "source": "data:;base64,H4sIAAAAAAAC/5SQwU7zMBCE732KPf/6V6oK4tBbSI0a1JIqdsUBcQjOojg0tmVvxOsjp6WqID1wsWXvfDOr+fduDkxhtiyednsFWZ6LnYKX+XL+Ols+lNVzVq1+/JZ79Vsq5Rrw9MAMjm7Yg3bWcqj1ByBqjlwzQSU2mRKr/0Kq7H5TyLVYAXYnwwvag9G9nxwZOLgrDGufgscLG+8Cw2KxuElqKdcX0g4q8ShyBYiBOtKMn4bbMRNbFxl9cK15M0xNor7L+Cs3NtNDIE2WATFSOm3d03GEIbohaJrSDr5JhSVIO9tEuJsDYmtYu8Ey3E4aXd2QtcdAkfgcdS4wL7fbQs2+AgAA//8N/lisDgIAAA=="
+        },
+        "mode": 384
+      },
+      {
+        "overwrite": true,
+        "path": "/etc/sysconfig/docker",
+        "contents": {
+          "compression": "gzip",
+          "source": "data:;base64,H4sIAAAAAAAC//IPCPH09wu2VdLVzSwoSUzKSS22TUvMKU5VAAno5iYWF0L4SlyefsGuzqFBrvFBru6ewSFBkbZKSlyOLi4ofCcff2dvFBEo29M1GMQDBAAA//9tAAl5cAAAAA=="
+        },
+        "mode": 420
+      }
+    ]
+  },
+  "systemd": {
+    "units": [
+      {
+        "contents": "[Unit]\nDescription=Set capabilities for the sshd executable\nBefore=sshd.service\n\n[Service]\nType=oneshot\nExecStart=/usr/sbin/setcap 'cap_net_bind_service=+ep' /usr/sbin/sshd\nRemainAfterExit=yes\n\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "sshd-capabilities.service"
+      },
+      {
+        "dropins": [
+          {
+            "contents": "[Service]\nExecStart=\nExecStart=/usr/sbin/sshd -D -o ListenAddress=0.0.0.0:2223 -o ListenAddress=[::]:2223\n",
+            "name": "10-custom-port.conf"
+          }
+        ],
+        "enabled": true,
+        "name": "sshd.service"
+      },
+      {
+        "contents": "[Unit]\nDescription=Docker Application Container Engine\nWants=network-online.target\nAfter=network-online.target\n[Service]\nType=notify\nEnvironmentFile=-/etc/sysconfig/docker\nExecStart=/usr/bin/dockerd\nExecReload=/bin/kill -s HUP $MAINPID\nExecStop=/bin/kill -s TERM $MAINPID\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "docker.service"
+      }
+    ]
+  }
+}
